@@ -36,7 +36,7 @@ class Symmetry_function(object):
         self.default_inputs = {'symmetry_function': 
                                   {
                                       'params': dict(),
-                                      'refdata_format':'vasp-out',
+                                      'refdata_format':'traj', # Change default to traj
                                       'compress_outcar':True,
                                       'data_per_tfrecord': 150,
                                       'valid_rate': 0.1,
