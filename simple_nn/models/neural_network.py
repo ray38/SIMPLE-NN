@@ -148,8 +148,16 @@ class Neural_network(object):
 
         #acti_func = 'selu'
         #acti_func = 'elu'
-        acti_func = 'sigmoid'
+        #acti_func = 'sigmoid'
         #acti_func = 'tanh'
+
+        if self.inputs['activation_function'] is not None:
+          if self.inputs['activation_function'].lower() in ["relu","sigmoid","tanh"]:
+            acti_func = self.inputs['activation_function'].lower()
+          else:
+            acti_func = 'sigmoid'
+        else:
+          acti_func = 'sigmoid'
 
         self.nodes = dict()
         for item in self.parent.inputs['atom_types']:
