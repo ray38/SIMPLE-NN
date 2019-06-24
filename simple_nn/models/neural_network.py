@@ -160,12 +160,31 @@ class Neural_network(object):
           acti_func = 'sigmoid'
 
         self.nodes = dict()
+        self.freezing_layers = dict()
+
         for item in self.parent.inputs['atom_types']:
             if isinstance(self.inputs['nodes'], collections.Mapping):
                 nodes = list(map(int, self.inputs['nodes'][item].split('-')))
             else:
                 nodes = list(map(int, self.inputs['nodes'].split('-')))
             nlayers = len(nodes)
+
+            freezing_layers_bool = False:
+            if self.inputs['freezing_layers'] is not None:
+              freezing_layers_bool = True
+              if isinstance(self.inputs['freezing_layers'], collections.Mapping):
+                  freezing_layers = listStringToBool(self.inputs['freezing_layers'][item].split('-'))
+                  if len(freezing_layers) != nlayers:
+                    self.logfile.write("length of freezing_layers not matching length of nodes\n")
+                    raise ValueError
+                  freezing_layers.append(False)
+
+              else:
+                  freezing_layers = listStringToBool(self.inputs['freezing_layers'].split('-'))
+                  if len(freezing_layers) != nlayers:
+                    self.logfile.write("length of freezing_layers not matching length of nodes\n")
+                    raise ValueError
+                  freezing_layers.append(False)
 
             # Check if network size is the same as that of potential read.
             if self.inputs['continue'] == 'weights':
@@ -215,6 +234,20 @@ class Neural_network(object):
 
             nodes.append(1)
             self.nodes[item] = nodes
+
+            if freezing_layers_bool:
+              for i, layer in enumerate(model.layers): 
+                layer.trainable = not freezing_layers[i]
+
+              model.compile()
+
+            else:
+              model.compile()
+              freezing_layers = [False] * (nlayers + 1)
+
+
+
+            self.freezing_layers[item] = freezing_layers
 
             self.models[item] = model
             self.ys[item] = self.models[item](self.next_elem['x_'+item])
@@ -1115,3 +1148,15 @@ class Neural_network(object):
             except tf.errors.OutOfRangeError:
                 break
         return res
+
+
+def listStringToBool(listString):
+  changes = { "True": True,
+             "False": False,
+             "true": True,
+             "false": False,
+             "1": True,
+             "0": False
+           }
+
+  return [ changes.get( x, x ) for x in listString ]
