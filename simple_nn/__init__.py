@@ -68,8 +68,22 @@ class Simple_nn(object):
             self.model = model
             self.inputs = deep_update(self.inputs, self.model.default_inputs)
 
-        with open(inputs) as input_file:
-            self.inputs = deep_update(self.inputs, yaml.load(input_file), warn_new_key=True, logfile=self.logfile)
+
+        if isinstance(inputs, str):
+            if inputs.endswith(".yaml"):
+                with open(inputs) as input_file:
+                    self.inputs = deep_update(self.inputs, yaml.load(input_file), warn_new_key=True, logfile=self.logfile)
+            else:
+                self.logfile.write("Warning: Input filetype NOT recognized.\n")
+                sys.exit(0)
+
+        elif isinstance(inputs, dict):
+            self.inputs = deep_update(self.inputs, inputs, warn_new_key=True, logfile=self.logfile)
+
+        else:
+            self.logfile.write("Warning: Inputs NOT recognized.\n")
+            sys.exit(0)
+
 
         if len(self.inputs['atom_types']) == 0:
             raise KeyError
