@@ -30,7 +30,7 @@ def _read_params(filename):
 
 
 class Symmetry_function(object):
-    def __init__(self, inputs=None):
+    def __init__(self, inputs=None, structure_list_path = './str_list'):
         self.parent = None
         self.key = 'symmetry_function'
         self.default_inputs = {'symmetry_function': 
@@ -56,7 +56,8 @@ class Symmetry_function(object):
                                       'scale_scale': 1.0,
                                   }
                               }
-        self.structure_list = './str_list'
+        #self.structure_list = './str_list'
+        self.structure_list = structure_list_path
         self.pickle_list = './pickle_list'
         self.train_data_list = './train_list'
         self.valid_data_list = './valid_list'
