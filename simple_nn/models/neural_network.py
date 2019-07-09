@@ -169,22 +169,23 @@ class Neural_network(object):
                 nodes = list(map(int, self.inputs['nodes'].split('-')))
             nlayers = len(nodes)
 
-            freezing_layers_bool = False:
-            if self.inputs['freezing_layers'] is not None:
-              freezing_layers_bool = True
-              if isinstance(self.inputs['freezing_layers'], collections.Mapping):
-                  freezing_layers = listStringToBool(self.inputs['freezing_layers'][item].split('-'))
-                  if len(freezing_layers) != nlayers:
-                    self.logfile.write("length of freezing_layers not matching length of nodes\n")
-                    raise ValueError
-                  freezing_layers.append(False)
+            freezing_layers_bool = False
+            if 'freezing_layers' in self.inputs:
+              if self.inputs['freezing_layers'] is not None:
+                freezing_layers_bool = True
+                if isinstance(self.inputs['freezing_layers'], collections.Mapping):
+                    freezing_layers = listStringToBool(self.inputs['freezing_layers'][item].split('-'))
+                    if len(freezing_layers) != nlayers:
+                      self.logfile.write("length of freezing_layers not matching length of nodes\n")
+                      raise ValueError
+                    freezing_layers.append(False)
 
-              else:
-                  freezing_layers = listStringToBool(self.inputs['freezing_layers'].split('-'))
-                  if len(freezing_layers) != nlayers:
-                    self.logfile.write("length of freezing_layers not matching length of nodes\n")
-                    raise ValueError
-                  freezing_layers.append(False)
+                else:
+                    freezing_layers = listStringToBool(self.inputs['freezing_layers'].split('-'))
+                    if len(freezing_layers) != nlayers:
+                      self.logfile.write("length of freezing_layers not matching length of nodes\n")
+                      raise ValueError
+                    freezing_layers.append(False)
 
             # Check if network size is the same as that of potential read.
             if self.inputs['continue'] == 'weights':
@@ -239,10 +240,10 @@ class Neural_network(object):
               for i, layer in enumerate(model.layers): 
                 layer.trainable = not freezing_layers[i]
 
-              model.compile()
+              #model.compile(optimizer=adam)
 
             else:
-              model.compile()
+              #model.compile(optimizer=adam)
               freezing_layers = [False] * (nlayers + 1)
 
 
