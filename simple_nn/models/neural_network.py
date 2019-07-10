@@ -150,10 +150,12 @@ class Neural_network(object):
         #acti_func = 'elu'
         #acti_func = 'sigmoid'
         #acti_func = 'tanh'
-
-        if self.inputs['activation_function'] is not None:
-          if self.inputs['activation_function'].lower() in ["relu","sigmoid","tanh"]:
-            acti_func = self.inputs['activation_function'].lower()
+        if "activation_function" in self.inputs:
+          if self.inputs['activation_function'] is not None:
+            if self.inputs['activation_function'].lower() in ["relu","sigmoid","tanh"]:
+              acti_func = self.inputs['activation_function'].lower()
+            else:
+              acti_func = 'sigmoid'
           else:
             acti_func = 'sigmoid'
         else:
@@ -246,7 +248,8 @@ class Neural_network(object):
               #model.compile(optimizer=adam)
               freezing_layers = [False] * (nlayers + 1)
 
-
+            print(model.summary())
+            print(model.get_config())
 
             self.freezing_layers[item] = freezing_layers
 
