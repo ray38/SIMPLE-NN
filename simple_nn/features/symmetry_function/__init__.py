@@ -522,8 +522,8 @@ class Symmetry_function(object):
                 res['N'] = type_num
                 res['tot_num'] = np.sum(list(type_num.values()))
                 res['partition'] = np.ones([res['tot_num']]).astype(np.int32)
-                res['E'] = atoms.get_total_energy()
-                res['F'] = atoms.get_forces()
+                # res['E'] = atoms.get_total_energy()
+                # res['F'] = atoms.get_forces()
                 res['struct_type'] = structure_names[ind]
                 res['struct_weight'] = structure_weights[ind]
                 res['atom_idx'] = atom_i
