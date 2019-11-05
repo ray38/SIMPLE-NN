@@ -436,7 +436,7 @@ class Symmetry_function(object):
                 valid_list.close()
  
 
-    def generate(self):
+    def generate(self, label):
 
         comm = self.get_comm()
 
@@ -522,6 +522,8 @@ class Symmetry_function(object):
                 res['N'] = type_num
                 res['tot_num'] = np.sum(list(type_num.values()))
                 res['partition'] = np.ones([res['tot_num']]).astype(np.int32)
+                res['E'] = None
+                res['F'] = None
                 # res['E'] = atoms.get_total_energy()
                 # res['F'] = atoms.get_forces()
                 res['struct_type'] = structure_names[ind]
@@ -579,7 +581,7 @@ class Symmetry_function(object):
                     res['params'][jtem] = params_set[jtem]['total']
 
                 if comm.rank == 0:
-                    data_dir = "./data/"
+                    data_dir = "./data"+label+"/"
                     if not os.path.exists(data_dir):
                         os.makedirs(data_dir)
                     tmp_filename = os.path.join(data_dir, "data{}.pickle".format(data_idx))
