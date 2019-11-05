@@ -14,9 +14,10 @@ from ...utils.mpiclass import DummyMPI, MPI4PY
 from braceexpand import braceexpand
 
 
-def _read_params(filename):
+def _read_params(filename, dir):
     params_i = list()
     params_d = list()
+    filename = dir+"/"+filename
     with open(filename, 'r') as fil:
         for line in fil:
             tmp = line.split()
@@ -30,8 +31,9 @@ def _read_params(filename):
 
 
 class Symmetry_function(object):
-    def __init__(self, inputs=None, structure_list_path = './str_list'):
+    def __init__(self, fp_dir, inputs=None, structure_list_path = '/str_list'):
         self.parent = None
+        self.dir = fp_dir
         self.key = 'symmetry_function'
         self.default_inputs = {'symmetry_function': 
                                   {
@@ -57,10 +59,10 @@ class Symmetry_function(object):
                                   }
                               }
         #self.structure_list = './str_list'
-        self.structure_list = structure_list_path
-        self.pickle_list = './pickle_list'
-        self.train_data_list = './train_list'
-        self.valid_data_list = './valid_list'
+        self.structure_list = fp_dir+structure_list_path
+        self.pickle_list = fp_dir+'/pickle_list'
+        self.train_data_list = fp_dir+'/train_list'
+        self.valid_data_list = fp_dir+'/valid_list'
         self.comm = None
 
     def set_inputs(self):
@@ -451,7 +453,7 @@ class Symmetry_function(object):
         for item in self.parent.inputs['atom_types']:
             params_set[item] = dict()
             params_set[item]['i'], params_set[item]['d'] = \
-                _read_params(self.inputs['params'][item])
+                _read_params(self.inputs['params'][item], self.dir)
             params_set[item]['ip'] = _gen_2Darray_for_ffi(params_set[item]['i'], ffi, "int")
             params_set[item]['dp'] = _gen_2Darray_for_ffi(params_set[item]['d'], ffi)
             params_set[item]['total'] = np.concatenate((params_set[item]['i'], params_set[item]['d']), axis=1)
