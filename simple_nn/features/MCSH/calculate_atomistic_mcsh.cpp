@@ -37,11 +37,12 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
     int total_bins, max_atoms_bin, bin_num, neigh_check_bins, nneigh;
     int bin_range[3], nbins[3], cell_shift[3], max_bin[3], min_bin[3], pbc_bin[3];
     //int bin_i[natoms][4];
-    double vol, tmp, tmp_r2, cutoff, cutoff_sqr, dradtmp, rRij, rRik, rRjk;
-    double plane_d[3], total_shift[3], precal[12], tmpd[9], dangtmp[3];
-    double vecij[3], vecik[3], vecjk[3], deljk[3];
+    double vol, tmp, tmp_r2, cutoff, cutoff_sqr;
+    // double dradtmp, rRij, rRik, rRjk;
+    // double plane_d[3], total_shift[3], precal[12], tmpd[9], dangtmp[3];
+    // double vecij[3], vecik[3], vecjk[3], deljk[3];
     double cross[3][3], reci[3][3], inv[3][3];//, powtwo[nsyms];
-    double max_rc_ang = 0.0;
+    // double max_rc_ang = 0.0;
     // int nsf[5+1];
 
     // for (int i=0; i<5+1; i++) {
