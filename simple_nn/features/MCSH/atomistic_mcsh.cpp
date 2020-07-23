@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdio.h>
-#include "calculate_atomistic_mcsh.h"
+#include "atomistic_mcsh.h"
 
 
 

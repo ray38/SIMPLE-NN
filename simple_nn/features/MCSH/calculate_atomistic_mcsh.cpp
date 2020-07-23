@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdio.h>
 #include "calculate_atomistic_mcsh.h"
-#include "atomistic_mcsh.h"
 
 // extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** scale,
 //                                         int* atom_i, int natoms, int* cal_atoms, int cal_num,
@@ -65,7 +64,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
     // Check for not implemented mcsh type.
     for (int m=0; m < nmcsh; ++m){
         bool implemented = false;
-        for (int i=0; i < 11; i++) {
+        for (int i=0; i < NUM_IMPLEMENTED_TYPE; i++) {
             if (params_i[m][0] == IMPLEMENTED_MCSH_TYPE[i][0] && params_i[m][1] == IMPLEMENTED_MCSH_TYPE[i][1]) {
                 implemented = true;
                 break;
