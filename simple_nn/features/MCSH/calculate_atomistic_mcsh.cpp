@@ -66,7 +66,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
     for (int m=0; m < nmcsh; ++m){
         bool implemented = false;
         for (int i=0; i < sizeof(IMPLEMENTED_MCSH_TYPE) / sizeof(IMPLEMENTED_MCSH_TYPE[0]); i++) {
-            if (params_i[m][0] == IMPLEMENTED_TYPE[i][0] && params_i[m][1] == IMPLEMENTED_TYPE[i][1]) {
+            if (params_i[m][0] == IMPLEMENTED_MCSH_TYPE[i][0] && params_i[m][1] == IMPLEMENTED_MCSH_TYPE[i][1]) {
                 implemented = true;
                 break;
             }
