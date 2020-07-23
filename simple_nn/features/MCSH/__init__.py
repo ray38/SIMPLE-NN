@@ -691,7 +691,7 @@ class MCSH_function(object):
 
                     errno = lib.calculate_atomistic_mcsh(cell_p, cart_p, scale_p, \
                                      atom_i_p, atom_num, cal_atoms_p, cal_num, \
-                                     params_set['ip'], params_set['dp'], params_set['num'], params_set['gaussian_params_p'], params_set['ngaussians_p']\
+                                     params_set['ip'], params_set['dp'], params_set['num'], params_set['gaussian_params_p'], params_set['ngaussians_p'],\
                                      x_p, dx_p)
                     comm.barrier()
                     errnos = comm.gather(errno)
