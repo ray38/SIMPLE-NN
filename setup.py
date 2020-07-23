@@ -95,7 +95,7 @@ setup(
     setup_requires=setup_requires,
     cffi_modules=[
         "simple_nn/features/symmetry_function/libsymf_builder.py:ffibuilder",
-        "simple_nn/features/symmetry_function/libmcsh_builder.py:ffibuilder",
+        "simple_nn/features/MCSH/libmcsh_builder.py:ffibuilder",
         "simple_nn/utils/libgdf_builder.py:ffibuilder",
     ],
 )
