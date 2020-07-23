@@ -9,12 +9,12 @@ ffibuilder.cdef(
     """int calculate_atomistic_mcsh(double **, double **, double **,
                                     int *, int, int*, int,
                                     int**, double **, int, double **, int, 
-                                    double**, double**, double**);
+                                    double**, double**);
     """
 )
 ffibuilder.set_source(
     "simple_nn.features.MCSH._libmcsh",
-    '#include "calculate_sf.h"',
+    '#include "calculate_atomistic_mcsh.h"',
     sources=[
         "simple_nn/features/MCSH/calculate_atomistic_mcsh.cpp",
     ],
