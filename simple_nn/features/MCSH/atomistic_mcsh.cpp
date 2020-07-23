@@ -459,9 +459,9 @@ void calc_MCSH_4_4(double x0, double y0, double z0, double r0_sqr, double A, dou
 
     double temp = C1 * exp( C2 * r0_sqr) * lambda_sqr;
 
-    double miu_4_1_1 = temp * y0 * z0 * (105*lambda_x0_sqr + C3);
-    double miu_4_1_2 = temp * x0 * z0 * (105*lambda_y0_sqr + C3);
-    double miu_4_1_3 = temp * x0 * y0 * (105*lambda_z0_sqr + C3);
+    double miu_4_4_1 = temp * y0 * z0 * (105*lambda_x0_sqr + C3);
+    double miu_4_4_2 = temp * x0 * z0 * (105*lambda_y0_sqr + C3);
+    double miu_4_4_3 = temp * x0 * y0 * (105*lambda_z0_sqr + C3);
 
     // dmiu1 dx/dy/dz
     deriv[0] = dx0dx() * temp * x0 * y0 * z0 * (210*C2*lambda_x0_sqr + 210*lambda_sqr + 2*C2*C3); 
