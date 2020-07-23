@@ -263,6 +263,7 @@ void calc_MCSH_3_3(double x0, double y0, double z0, double r0_sqr, double A, dou
     // double r0_sqr = x0*x0 + y0*y0 + z0*z0;
     double C1 = calc_C1(A,B,alpha,beta);
     double C2 = calc_C2(alpha, beta);
+    double lambda = calc_lambda(alpha, beta);
 
     double temp =  C1 * exp( C2 * r0_sqr) * lambda * lambda * lambda;
     double m_3_3 = temp * x0 * y0 * z0;
