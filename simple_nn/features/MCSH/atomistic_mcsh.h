@@ -12,7 +12,7 @@ const int IMPLEMENTED_MCSH_TYPE[11][2] = {
     {4, 2},
     {4, 3},
     {4, 4}
-}; // Change this when you implement new symfunc type!
+}; // Change this when you implement new type!
 
 const int NUM_IMPLEMENTED_TYPE = 11;
 

@@ -17,6 +17,7 @@ ffibuilder.set_source(
     '#include "calculate_atomistic_mcsh.h"',
     sources=[
         "simple_nn/features/MCSH/calculate_atomistic_mcsh.cpp",
+        "simple_nn/features/MCSH/atomistic_mcsh.cpp"
     ],
     source_extension=".cpp",
     include_dirs=["simple_nn/features/MCSH/"],
