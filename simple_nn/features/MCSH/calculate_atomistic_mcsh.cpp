@@ -38,6 +38,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
     int bin_range[3], nbins[3], cell_shift[3], max_bin[3], min_bin[3], pbc_bin[3];
     //int bin_i[natoms][4];
     double vol, tmp, tmp_r2, cutoff, cutoff_sqr;
+    double plane_d[3], total_shift[3];
     // double dradtmp, rRij, rRik, rRjk;
     // double plane_d[3], total_shift[3], precal[12], tmpd[9], dangtmp[3];
     // double vecij[3], vecik[3], vecjk[3], deljk[3];
