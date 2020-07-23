@@ -37,7 +37,7 @@ double dz0dz(){
     return -1;
 }
 
-void calc_MCSH_0_1(double x0, double y0, double z0, double r0_sqr, double A, double B, double alpha, double beta, double &value, double *deriv)
+void calc_MCSH_0_1(double x0, double y0, double z0, double r0_sqr, double A, double B, double alpha, double beta, double *value, double *deriv)
 {   
     // double r0_sqr = x0*x0 + y0*y0 + z0*z0;
     double C1 = calc_C1(A,B,alpha,beta);
@@ -258,7 +258,7 @@ void calc_MCSH_3_2(double x0, double y0, double z0, double r0_sqr, double A, dou
     value[5] = miu_3_2_3;
 }
 
-void calc_MCSH_3_3(double x0, double y0, double z0, double r0_sqr, double A, double B, double alpha, double beta, double &value, double *deriv)
+void calc_MCSH_3_3(double x0, double y0, double z0, double r0_sqr, double A, double B, double alpha, double beta, double *value, double *deriv)
 {   
     // double r0_sqr = x0*x0 + y0*y0 + z0*z0;
     double C1 = calc_C1(A,B,alpha,beta);
