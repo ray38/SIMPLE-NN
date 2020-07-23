@@ -58,7 +58,7 @@ else:
 # TODO: install requires add
 # FIXME: fill the empty part
 setup(
-    name='simple-nn',
+    name='simple-nn-mcsh',
     version=__version__,
     description='Package for generating atomic potentials using neural network.',
     long_description=long_description,
@@ -95,6 +95,7 @@ setup(
     setup_requires=setup_requires,
     cffi_modules=[
         "simple_nn/features/symmetry_function/libsymf_builder.py:ffibuilder",
+        "simple_nn/features/symmetry_function/libmcsh_builder.py:ffibuilder",
         "simple_nn/utils/libgdf_builder.py:ffibuilder",
     ],
 )

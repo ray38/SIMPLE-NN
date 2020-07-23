@@ -1,0 +1,20 @@
+generate_features: true
+preprocess: true
+train_model: true
+atom_types:
+ - Si
+ - O
+
+symmetry_function:
+  params:
+    gaussian_params:
+      Si: gaussian_params_Si
+      O: gaussian_params_O
+    mcsh_params: MCSH_params
+       
+neural_network:
+  method: Adam
+  nodes: 30-30
+  batch_size: 10
+  total_iteration: 50000
+  learning_rate: 0.001
