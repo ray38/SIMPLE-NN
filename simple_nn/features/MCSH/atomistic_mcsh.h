@@ -14,7 +14,7 @@ const int IMPLEMENTED_MCSH_TYPE[11][2] = {
     {4, 4}
 }; // Change this when you implement new symfunc type!
 
-const int NUM_IMPLEMENTED_TYPE = 11;
+// const int NUM_IMPLEMENTED_TYPE = 11;
 
 typedef void (*AtomisticMCSHFunction) ( double, double, double, double, double, double, double, double, double *, double *);
 // typedef void (*MCSHFunctionType1) ( double, double, double, double, double, double, double, double *, double *);
