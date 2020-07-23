@@ -58,7 +58,7 @@ else:
 # TODO: install requires add
 # FIXME: fill the empty part
 setup(
-    name='simple-nn-mcsh',
+    name='simple-nn',
     version=__version__,
     description='Package for generating atomic potentials using neural network.',
     long_description=long_description,
