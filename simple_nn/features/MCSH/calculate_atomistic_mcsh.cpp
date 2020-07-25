@@ -341,9 +341,9 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
             }
         
             mcsh[ii][m] = M;
-            dmcsh[ii][m*natoms*3] = dMdx;
-            dmcsh[ii][m*natoms*3 + 1] = dMdy;
-            dmcsh[ii][m*natoms*3 + 2] = dMdz;
+            dmcsh[ii][m*natoms*3 + i*3] = dMdx;
+            dmcsh[ii][m*natoms*3 + i*3 + 1] = dMdy;
+            dmcsh[ii][m*natoms*3 + i*3 + 2] = dMdz;
         }
         /*
         for (int j=0; j < nneigh; ++j) {
