@@ -107,6 +107,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
         //     powint[s] = (params_d[s][2] - int(params_d[s][2])) < 1e-6;
         // }
     }
+    // cout<<cutoff<<endl;
 
     cutoff_sqr = cutoff * cutoff;
 
@@ -243,7 +244,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                     int neigh_atom_type = nei_list_i[j*2];
                     double x0 = nei_list_d[j*4], y0 = nei_list_d[j*4+1], z0 = nei_list_d[j*4+2], r0_sqr = nei_list_d[j*4+3];
                     for (int g = 0; g < ngaussians[neigh_atom_type-1]; ++g){
-                        double B = atom_gaussian[neigh_atom_type][g*2], alpha = atom_gaussian[neigh_atom_type][g*2+1];
+                        double B = atom_gaussian[neigh_atom_type-1][g*2], alpha = atom_gaussian[neigh_atom_type-1][g*2+1];
                         mcsh_function(x0, y0, z0, r0_sqr, A, B, alpha, beta, m, deriv);
                         M += m[0];
                         dMdx += deriv[0];
@@ -269,7 +270,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                     int neigh_atom_type = nei_list_i[j*2];
                     double x0 = nei_list_d[j*4], y0 = nei_list_d[j*4+1], z0 = nei_list_d[j*4+2], r0_sqr = nei_list_d[j*4+3];
                     for (int g = 0; g < ngaussians[neigh_atom_type-1]; ++g){
-                        double B = atom_gaussian[neigh_atom_type][g*2], alpha = atom_gaussian[neigh_atom_type][g*2+1];
+                        double B = atom_gaussian[neigh_atom_type-1][g*2], alpha = atom_gaussian[neigh_atom_type-1][g*2+1];
                         mcsh_function(x0, y0, z0, r0_sqr, A, B, alpha, beta, miu, deriv);
                         sum_miu1 += miu[0];
                         sum_miu2 += miu[1];
@@ -304,7 +305,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                     int neigh_atom_type = nei_list_i[j*2];
                     double x0 = nei_list_d[j*4], y0 = nei_list_d[j*4+1], z0 = nei_list_d[j*4+2], r0_sqr = nei_list_d[j*4+3];
                     for (int g = 0; g < ngaussians[neigh_atom_type-1]; ++g){
-                        double B = atom_gaussian[neigh_atom_type][g*2], alpha = atom_gaussian[neigh_atom_type][g*2+1];
+                        double B = atom_gaussian[neigh_atom_type-1][g*2], alpha = atom_gaussian[neigh_atom_type-1][g*2+1];
                         mcsh_function(x0, y0, z0, r0_sqr, A, B, alpha, beta, miu, deriv);
                         sum_miu1 += miu[0];
                         sum_miu2 += miu[1];
