@@ -25,8 +25,6 @@ double calc_C1(double A, double B, double alpha, double beta);
 
 double calc_C2(double alpha, double beta);
 
-double calc_a(double gamma, double lambda);
-
 double calc_lambda(double alpha, double beta);
 
 double calc_gamma(double alpha, double beta);
