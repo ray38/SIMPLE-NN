@@ -253,9 +253,9 @@ void calc_MCSH_3_2(double x0, double y0, double z0, double r0_sqr, double A, dou
     value[0] = miu_3_2_1;
     value[1] = miu_3_2_2;
     value[2] = miu_3_2_3;
-    value[3] = miu_3_2_1;
-    value[4] = miu_3_2_2;
-    value[5] = miu_3_2_3;
+    value[3] = miu_3_2_4;
+    value[4] = miu_3_2_5;
+    value[5] = miu_3_2_6;
 }
 
 void calc_MCSH_3_3(double x0, double y0, double z0, double r0_sqr, double A, double B, double alpha, double beta, double *value, double *deriv)
@@ -334,15 +334,22 @@ void calc_MCSH_4_2(double x0, double y0, double z0, double r0_sqr, double A, dou
     double x0_sqr = x0*x0;
     double y0_sqr = y0*y0;
     double z0_sqr = z0*z0;
+    double x0_3 = x0_sqr * x0;
+    double y0_3 = y0_sqr * y0;
+    double z0_3 = z0_sqr * z0;
+
+    double x0_lambda_3 = x0_3 * lambda_3;
+    double y0_lambda_3 = y0_3 * lambda_3;
+    double z0_lambda_3 = z0_3 * lambda_3;
 
     double gamma = calc_gamma(alpha, beta);
-    double C3 = (15/(2*gamma)) - 3;
+    double C3 = (315/(2*gamma)) - 45;
 
     double temp = C1 * exp( C2 * r0_sqr) * lambda;
 
-    double tempx = C3 * lambda * x0 + 105 * lambda_3 * x0_sqr * x0;
-    double tempy = C3 * lambda * y0 + 105 * lambda_3 * y0_sqr * y0;
-    double tempz = C3 * lambda * z0 + 105 * lambda_3 * z0_sqr * z0;
+    double tempx = C3 * lambda * x0 + 105 * x0_lambda_3;
+    double tempy = C3 * lambda * y0 + 105 * y0_lambda_3;
+    double tempz = C3 * lambda * z0 + 105 * z0_lambda_3;
 
     double miu_4_2_1 = temp * y0 * tempx;
     double miu_4_2_2 = temp * x0 * tempy;
@@ -384,9 +391,9 @@ void calc_MCSH_4_2(double x0, double y0, double z0, double r0_sqr, double A, dou
     value[0] = miu_4_2_1;
     value[1] = miu_4_2_2;
     value[2] = miu_4_2_3;
-    value[3] = miu_4_2_1;
-    value[4] = miu_4_2_2;
-    value[5] = miu_4_2_3;
+    value[3] = miu_4_2_4;
+    value[4] = miu_4_2_5;
+    value[5] = miu_4_2_6;
 }
 
 
