@@ -237,10 +237,13 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
             // params_d: sigma, weight, A, beta, cutoff
             double weight = params_d[m][1], A = params_d[m][2], beta = params_d[m][3];
             double M = 0;
-            double dMdx = 0, dMdy = 0, dMdz = 0;
+            // double dMdx = 0, dMdy = 0, dMdz = 0;
             if (mcsh_type == 1){
                 double m[1], deriv[3];
+                
                 for (int j = 0; j < nneigh; ++j) {
+                    double dMdx = 0, dMdy = 0, dMdz = 0;
+
                     int neigh_atom_type = nei_list_i[j*2];
                     double x0 = nei_list_d[j*4], y0 = nei_list_d[j*4+1], z0 = nei_list_d[j*4+2], r0_sqr = nei_list_d[j*4+3];
                     for (int g = 0; g < ngaussians[neigh_atom_type-1]; ++g){
@@ -251,20 +254,26 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                         dMdy += deriv[1];
                         dMdz += deriv[2];
                     }
+                    dMdx = dMdx * weight;
+                    dMdy = dMdy * weight;
+                    dMdz = dMdz * weight;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3] = dMdx;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 1] = dMdy;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 2] = dMdz;
                 }
-
                 M = M * weight;
-                dMdx = dMdx * weight;
-                dMdy = dMdy * weight;
-                dMdz = dMdz * weight;
-
+                mcsh[ii][m] = M;
             }
 
             if (mcsh_type == 2){
                 double sum_miu1 = 0, sum_miu2 = 0, sum_miu3 = 0;
-                double sum_dmiu1_dx = 0, sum_dmiu1_dy = 0, sum_dmiu1_dz = 0;
-                double sum_dmiu2_dx = 0, sum_dmiu2_dy = 0, sum_dmiu2_dz = 0;
-                double sum_dmiu3_dx = 0, sum_dmiu3_dy = 0, sum_dmiu3_dz = 0;
+                // double sum_dmiu1_dx = 0, sum_dmiu1_dy = 0, sum_dmiu1_dz = 0;
+                // double sum_dmiu2_dx = 0, sum_dmiu2_dy = 0, sum_dmiu2_dz = 0;
+                // double sum_dmiu3_dx = 0, sum_dmiu3_dy = 0, sum_dmiu3_dz = 0;
+
+                double sum_dmiu1_dxj[nneigh], sum_dmiu1_dyj[nneigh], sum_dmiu1_dzj[nneigh];
+                double sum_dmiu2_dxj[nneigh], sum_dmiu2_dyj[nneigh], sum_dmiu2_dzj[nneigh];
+                double sum_dmiu3_dxj[nneigh], sum_dmiu3_dyj[nneigh], sum_dmiu3_dzj[nneigh];
                 double miu[3], deriv[9];
                 for (int j = 0; j < nneigh; ++j) {
                     int neigh_atom_type = nei_list_i[j*2];
@@ -272,34 +281,52 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                     for (int g = 0; g < ngaussians[neigh_atom_type-1]; ++g){
                         double B = atom_gaussian[neigh_atom_type-1][g*2], alpha = atom_gaussian[neigh_atom_type-1][g*2+1];
                         mcsh_function(x0, y0, z0, r0_sqr, A, B, alpha, beta, miu, deriv);
+                        // miu: miu_1, miu_2, miu_3
+                        // deriv: dmiu1_dxj, dmiu1_dyj, dmiu1_dzj, dmiu2_dxj, dmiu2_dyj, dmiu2_dzj, dmiu3_dxj, dmiu3_dyj, dmiu3_dzj
                         sum_miu1 += miu[0];
                         sum_miu2 += miu[1];
                         sum_miu3 += miu[2];
-                        sum_dmiu1_dx += deriv[0];
-                        sum_dmiu1_dy += deriv[1];
-                        sum_dmiu1_dz += deriv[2];
-                        sum_dmiu2_dx += deriv[3];
-                        sum_dmiu2_dy += deriv[4];
-                        sum_dmiu2_dz += deriv[5];
-                        sum_dmiu3_dx += deriv[6];
-                        sum_dmiu3_dy += deriv[7];
-                        sum_dmiu3_dz += deriv[8];
+                        sum_dmiu1_dxj[j] += deriv[0];
+                        sum_dmiu1_dyj[j] += deriv[1];
+                        sum_dmiu1_dzj[j] += deriv[2];
+                        sum_dmiu2_dxj[j] += deriv[3];
+                        sum_dmiu2_dyj[j] += deriv[4];
+                        sum_dmiu2_dzj[j] += deriv[5];
+                        sum_dmiu3_dxj[j] += deriv[6];
+                        sum_dmiu3_dyj[j] += deriv[7];
+                        sum_dmiu3_dzj[j] += deriv[8];
                     }
                 }
-                M = sqrt(sum_miu1*sum_miu1 + sum_miu2*sum_miu2 + sum_miu3*sum_miu3) * weight;
-                dMdx = (1/M) * (sum_miu1*sum_dmiu1_dx + sum_miu2*sum_dmiu2_dx + sum_miu3*sum_dmiu3_dx) * weight;
-                dMdy = (1/M) * (sum_miu1*sum_dmiu1_dy + sum_miu2*sum_dmiu2_dy + sum_miu3*sum_dmiu3_dy) * weight;
-                dMdz = (1/M) * (sum_miu1*sum_dmiu1_dz + sum_miu2*sum_dmiu2_dz + sum_miu3*sum_dmiu3_dz) * weight;
+                M = sqrt(sum_miu1*sum_miu1 + sum_miu2*sum_miu2 + sum_miu3*sum_miu3);
+                int dMdx, dMdy, dMdz;
+                for (int j = 0; j < nneigh; ++j) {
+                    dMdx = (1/M) * (sum_miu1 * sum_dmiu1_dxj[j] + sum_miu2 * sum_dmiu2_dxj[j] + sum_miu3 * sum_dmiu3_dxj[j]) * weight;
+                    dMdy = (1/M) * (sum_miu1 * sum_dmiu1_dyj[j] + sum_miu2 * sum_dmiu2_dyj[j] + sum_miu3 * sum_dmiu3_dyj[j]) * weight;
+                    dMdz = (1/M) * (sum_miu1 * sum_dmiu1_dzj[j] + sum_miu2 * sum_dmiu2_dzj[j] + sum_miu3 * sum_dmiu3_dzj[j]) * weight;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3] = dMdx;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 1] = dMdy;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 2] = dMdz;
+                }
+                M = M * weight;
+                mcsh[ii][m] = M;
             }
 
             if (mcsh_type == 3){
                 double sum_miu1 = 0, sum_miu2 = 0, sum_miu3 = 0, sum_miu4 = 0, sum_miu5 = 0, sum_miu6 = 0;
-                double sum_dmiu1_dx = 0, sum_dmiu1_dy = 0, sum_dmiu1_dz = 0;
-                double sum_dmiu2_dx = 0, sum_dmiu2_dy = 0, sum_dmiu2_dz = 0;
-                double sum_dmiu3_dx = 0, sum_dmiu3_dy = 0, sum_dmiu3_dz = 0;
-                double sum_dmiu4_dx = 0, sum_dmiu4_dy = 0, sum_dmiu4_dz = 0;
-                double sum_dmiu5_dx = 0, sum_dmiu5_dy = 0, sum_dmiu5_dz = 0;
-                double sum_dmiu6_dx = 0, sum_dmiu6_dy = 0, sum_dmiu6_dz = 0;
+                // double sum_dmiu1_dx = 0, sum_dmiu1_dy = 0, sum_dmiu1_dz = 0;
+                // double sum_dmiu2_dx = 0, sum_dmiu2_dy = 0, sum_dmiu2_dz = 0;
+                // double sum_dmiu3_dx = 0, sum_dmiu3_dy = 0, sum_dmiu3_dz = 0;
+                // double sum_dmiu4_dx = 0, sum_dmiu4_dy = 0, sum_dmiu4_dz = 0;
+                // double sum_dmiu5_dx = 0, sum_dmiu5_dy = 0, sum_dmiu5_dz = 0;
+                // double sum_dmiu6_dx = 0, sum_dmiu6_dy = 0, sum_dmiu6_dz = 0;
+
+                double sum_dmiu1_dxj[nneigh], sum_dmiu1_dyj[nneigh], sum_dmiu1_dzj[nneigh];
+                double sum_dmiu2_dxj[nneigh], sum_dmiu2_dyj[nneigh], sum_dmiu2_dzj[nneigh];
+                double sum_dmiu3_dxj[nneigh], sum_dmiu3_dyj[nneigh], sum_dmiu3_dzj[nneigh];
+                double sum_dmiu4_dxj[nneigh], sum_dmiu4_dyj[nneigh], sum_dmiu4_dzj[nneigh];
+                double sum_dmiu5_dxj[nneigh], sum_dmiu5_dyj[nneigh], sum_dmiu5_dzj[nneigh];
+                double sum_dmiu6_dxj[nneigh], sum_dmiu6_dyj[nneigh], sum_dmiu6_dzj[nneigh];
+
                 double miu[6], deriv[18];
                 for (int j = 0; j < nneigh; ++j) {
                     int neigh_atom_type = nei_list_i[j*2];
@@ -313,37 +340,48 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                         sum_miu4 += miu[3];
                         sum_miu5 += miu[4];
                         sum_miu6 += miu[5];
-                        sum_dmiu1_dx += deriv[0];
-                        sum_dmiu1_dy += deriv[1];
-                        sum_dmiu1_dz += deriv[2];
-                        sum_dmiu2_dx += deriv[3];
-                        sum_dmiu2_dy += deriv[4];
-                        sum_dmiu2_dz += deriv[5];
-                        sum_dmiu3_dx += deriv[6];
-                        sum_dmiu3_dy += deriv[7];
-                        sum_dmiu3_dz += deriv[8];
-                        sum_dmiu4_dx += deriv[9];
-                        sum_dmiu4_dy += deriv[10];
-                        sum_dmiu4_dz += deriv[11];
-                        sum_dmiu5_dx += deriv[12];
-                        sum_dmiu5_dy += deriv[13];
-                        sum_dmiu5_dz += deriv[14];
-                        sum_dmiu6_dx += deriv[15];
-                        sum_dmiu6_dy += deriv[16];
-                        sum_dmiu6_dz += deriv[17];
-
+                        sum_dmiu1_dxj[j] += deriv[0];
+                        sum_dmiu1_dyj[j] += deriv[1];
+                        sum_dmiu1_dzj[j] += deriv[2];
+                        sum_dmiu2_dxj[j] += deriv[3];
+                        sum_dmiu2_dyj[j] += deriv[4];
+                        sum_dmiu2_dzj[j] += deriv[5];
+                        sum_dmiu3_dxj[j] += deriv[6];
+                        sum_dmiu3_dyj[j] += deriv[7];
+                        sum_dmiu3_dzj[j] += deriv[8];
+                        sum_dmiu4_dxj[j] += deriv[9];
+                        sum_dmiu4_dyj[j] += deriv[10];
+                        sum_dmiu4_dzj[j] += deriv[11];
+                        sum_dmiu5_dxj[j] += deriv[12];
+                        sum_dmiu5_dyj[j] += deriv[13];
+                        sum_dmiu5_dzj[j] += deriv[14];
+                        sum_dmiu6_dxj[j] += deriv[15];
+                        sum_dmiu6_dyj[j] += deriv[16];
+                        sum_dmiu6_dzj[j] += deriv[17];
                     }
                 }
-                M = sqrt(sum_miu1*sum_miu1 + sum_miu2*sum_miu2 + sum_miu3*sum_miu3 + sum_miu4*sum_miu4 + sum_miu5*sum_miu5 + sum_miu6*sum_miu6) * weight;
-                dMdx = (1/M) * (sum_miu1*sum_dmiu1_dx + sum_miu2*sum_dmiu2_dx + sum_miu3*sum_dmiu3_dx + sum_miu4*sum_dmiu4_dx + sum_miu5*sum_dmiu5_dx + sum_miu6*sum_dmiu6_dx) * weight;
-                dMdy = (1/M) * (sum_miu1*sum_dmiu1_dy + sum_miu2*sum_dmiu2_dy + sum_miu3*sum_dmiu3_dy + sum_miu4*sum_dmiu4_dy + sum_miu5*sum_dmiu5_dy + sum_miu6*sum_dmiu6_dy) * weight;
-                dMdz = (1/M) * (sum_miu1*sum_dmiu1_dz + sum_miu2*sum_dmiu2_dz + sum_miu3*sum_dmiu3_dz + sum_miu4*sum_dmiu4_dz + sum_miu5*sum_dmiu5_dz + sum_miu6*sum_dmiu6_dz) * weight;
+                M = sqrt(sum_miu1*sum_miu1 + sum_miu2*sum_miu2 + sum_miu3*sum_miu3 + sum_miu4*sum_miu4 + sum_miu5*sum_miu5 + sum_miu6*sum_miu6);
+                int dMdx, dMdy, dMdz;
+                for (int j = 0; j < nneigh; ++j) {
+                    dMdx = (1/M) * (sum_miu1 * sum_dmiu1_dxj[j] + sum_miu2 * sum_dmiu2_dxj[j] + sum_miu3 * sum_dmiu3_dxj[j] + sum_miu4 * sum_dmiu4_dxj[j] + sum_miu5 * sum_dmiu5_dxj[j] + sum_miu6 * sum_dmiu6_dxj[j]) * weight;
+                    dMdy = (1/M) * (sum_miu1 * sum_dmiu1_dyj[j] + sum_miu2 * sum_dmiu2_dyj[j] + sum_miu3 * sum_dmiu3_dyj[j] + sum_miu4 * sum_dmiu4_dyj[j] + sum_miu5 * sum_dmiu5_dyj[j] + sum_miu6 * sum_dmiu6_dyj[j]) * weight;
+                    dMdz = (1/M) * (sum_miu1 * sum_dmiu1_dzj[j] + sum_miu2 * sum_dmiu2_dzj[j] + sum_miu3 * sum_dmiu3_dzj[j] + sum_miu4 * sum_dmiu4_dzj[j] + sum_miu5 * sum_dmiu5_dzj[j] + sum_miu6 * sum_dmiu6_dzj[j]) * weight;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3] = dMdx;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 1] = dMdy;
+                    dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 2] = dMdz;
+                }
+                M = M * weight;
+                mcsh[ii][m] = M;
+                // M = sqrt(sum_miu1*sum_miu1 + sum_miu2*sum_miu2 + sum_miu3*sum_miu3 + sum_miu4*sum_miu4 + sum_miu5*sum_miu5 + sum_miu6*sum_miu6) * weight;
+                // dMdx = (1/M) * (sum_miu1*sum_dmiu1_dx + sum_miu2*sum_dmiu2_dx + sum_miu3*sum_dmiu3_dx + sum_miu4*sum_dmiu4_dx + sum_miu5*sum_dmiu5_dx + sum_miu6*sum_dmiu6_dx) * weight;
+                // dMdy = (1/M) * (sum_miu1*sum_dmiu1_dy + sum_miu2*sum_dmiu2_dy + sum_miu3*sum_dmiu3_dy + sum_miu4*sum_dmiu4_dy + sum_miu5*sum_dmiu5_dy + sum_miu6*sum_dmiu6_dy) * weight;
+                // dMdz = (1/M) * (sum_miu1*sum_dmiu1_dz + sum_miu2*sum_dmiu2_dz + sum_miu3*sum_dmiu3_dz + sum_miu4*sum_dmiu4_dz + sum_miu5*sum_dmiu5_dz + sum_miu6*sum_dmiu6_dz) * weight;
             }
         
-            mcsh[ii][m] = M;
-            dmcsh[ii][m*natoms*3 + i*3] = dMdx;
-            dmcsh[ii][m*natoms*3 + i*3 + 1] = dMdy;
-            dmcsh[ii][m*natoms*3 + i*3 + 2] = dMdz;
+            // mcsh[ii][m] = M;
+            // dmcsh[ii][m*natoms*3 + i*3] = dMdx;
+            // dmcsh[ii][m*natoms*3 + i*3 + 1] = dMdy;
+            // dmcsh[ii][m*natoms*3 + i*3 + 2] = dMdz;
         }
         /*
         for (int j=0; j < nneigh; ++j) {
