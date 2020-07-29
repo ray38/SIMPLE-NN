@@ -10,7 +10,7 @@ double calc_C1(double A, double B, double alpha, double beta){
 }
 
 double calc_C2(double alpha, double beta){
-    return alpha * beta / (alpha + beta);
+    return -1 * (alpha * beta / (alpha + beta));
 }
 
 
