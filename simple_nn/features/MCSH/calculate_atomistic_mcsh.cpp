@@ -239,7 +239,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
             double M = 0;
             // double dMdx = 0, dMdy = 0, dMdz = 0;
             if (mcsh_type == 1){
-                double m[1], deriv[3];
+                double m_desc[1], deriv[3];
                 
                 for (int j = 0; j < nneigh; ++j) {
                     double dMdx = 0, dMdy = 0, dMdz = 0;
@@ -248,8 +248,8 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                     double x0 = nei_list_d[j*4], y0 = nei_list_d[j*4+1], z0 = nei_list_d[j*4+2], r0_sqr = nei_list_d[j*4+3];
                     for (int g = 0; g < ngaussians[neigh_atom_type-1]; ++g){
                         double B = atom_gaussian[neigh_atom_type-1][g*2], alpha = atom_gaussian[neigh_atom_type-1][g*2+1];
-                        mcsh_function(x0, y0, z0, r0_sqr, A, B, alpha, beta, m, deriv);
-                        M += m[0];
+                        mcsh_function(x0, y0, z0, r0_sqr, A, B, alpha, beta, m_desc, deriv);
+                        M += m_desc[0];
                         dMdx += deriv[0];
                         dMdy += deriv[1];
                         dMdz += deriv[2];
