@@ -455,7 +455,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
                     dmcsh[ii][m*natoms*3 + nei_list_i[j*2 + 1]*3 + 2] = dMdz;
                 }
                 M = M * weight;
-                mcsh[ii][m] = M;*/
+                mcsh[ii][m] = M;
                 // M = sqrt(sum_miu1*sum_miu1 + sum_miu2*sum_miu2 + sum_miu3*sum_miu3 + sum_miu4*sum_miu4 + sum_miu5*sum_miu5 + sum_miu6*sum_miu6) * weight;
                 // dMdx = (1/M) * (sum_miu1*sum_dmiu1_dx + sum_miu2*sum_dmiu2_dx + sum_miu3*sum_dmiu3_dx + sum_miu4*sum_dmiu4_dx + sum_miu5*sum_dmiu5_dx + sum_miu6*sum_dmiu6_dx) * weight;
                 // dMdy = (1/M) * (sum_miu1*sum_dmiu1_dy + sum_miu2*sum_dmiu2_dy + sum_miu3*sum_dmiu3_dy + sum_miu4*sum_dmiu4_dy + sum_miu5*sum_dmiu5_dy + sum_miu6*sum_dmiu6_dy) * weight;
@@ -465,7 +465,7 @@ extern "C" int calculate_atomistic_mcsh(double** cell, double** cart, double** s
             // mcsh[ii][m] = M;
             // dmcsh[ii][m*natoms*3 + i*3] = dMdx;
             // dmcsh[ii][m*natoms*3 + i*3 + 1] = dMdy;
-            // dmcsh[ii][m*natoms*3 + i*3 + 2] = dMdz;
+            // dmcsh[ii][m*natoms*3 + i*3 + 2] = dMdz;*/
         }
         /*
         for (int j=0; j < nneigh; ++j) {
